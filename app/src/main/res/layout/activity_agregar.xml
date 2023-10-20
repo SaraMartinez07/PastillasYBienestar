@@ -23,15 +23,41 @@
         android:id="@+id/textView2"
         android:layout_width="357dp"
         android:layout_height="47dp"
+        android:layout_marginBottom="264dp"
         android:onClick="dispatchTakePictureIntent"
         android:text="Medicamento"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/miImageView"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintTop_toBottomOf="@+id/edID"
+        app:layout_constraintVertical_bias="0.355" />
+
+    <Button
+        android:id="@+id/btnGuardar"
+        android:layout_width="108dp"
+        android:layout_height="73dp"
+        android:onClick="guardarMedic"
+        android:text="Guardar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infMedicamento"
+        app:layout_constraintVertical_bias="0.29" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="349dp"
+        android:layout_height="52dp"
+        android:text="Descripción "
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.403"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nomMedicamento"
+        app:layout_constraintVertical_bias="0.053" />
 
     <EditText
         android:id="@+id/nomMedicamento"
@@ -43,22 +69,9 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.033" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="349dp"
-        android:layout_height="52dp"
-        android:text="Descripción "
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomMedicamento"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/infMedicamento"
@@ -70,32 +83,21 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.568"
+        app:layout_constraintHorizontal_bias="0.431"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.034" />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/imgVAlarma"
-        android:layout_width="130dp"
-        android:layout_height="131dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <EditText
+        android:id="@+id/edID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:ems="10"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.117"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infMedicamento"
-        app:layout_constraintVertical_bias="0.302"
-        app:srcCompat="@drawable/ai_generated_image" />
+        app:layout_constraintTop_toBottomOf="@+id/miImageView" />
 
-    <Button
-        android:id="@+id/btnGuardar"
-        android:layout_width="108dp"
-        android:layout_height="73dp"
-        android:text="Guardar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.815"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infMedicamento"
-        app:layout_constraintVertical_bias="0.401" />
 </androidx.constraintlayout.widget.ConstraintLayout>

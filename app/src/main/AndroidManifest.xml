@@ -19,6 +19,12 @@
         android:theme="@style/Theme.PastillasYBienestar"
         tools:targetApi="31">
         <activity
+            android:name=".AddAlarma"
+            android:exported="false" />
+        <activity
+            android:name=".ProgMedi"
+            android:exported="false" />
+        <activity
             android:name=".ListaMedi"
             android:exported="false" />
 
@@ -36,9 +42,6 @@
 
         <activity
             android:name=".Agregar"
-            android:exported="false" />
-        <activity
-            android:name=".Alarma"
             android:exported="false" />
         <activity
             android:name=".AgregarMedicamento"

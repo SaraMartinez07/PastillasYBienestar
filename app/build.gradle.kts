@@ -1,8 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-}
 
+}
+apply plugin: 'kotlin-kapt'
 android {
     namespace = "com.example.pastillasybienestar"
     compileSdk = 33
@@ -37,10 +38,19 @@ android {
 
 dependencies {
 
+    val room_version = "2.5.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    implementation ("androidx.room:room-runtime:2.4.0")
+    kapt ("androidx.room:room-compiler:2.4.0")
+
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.room:room-common:2.5.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

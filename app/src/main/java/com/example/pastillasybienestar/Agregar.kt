@@ -12,10 +12,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -28,138 +32,83 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
 
 class Agregar : AppCompatActivity() {
 
-    private lateinit var imageView: ImageView
-    private lateinit var nomMedicamentoEditText: EditText
-    private lateinit var infMedicamentoEditText: EditText
-    private lateinit var btnGuardar: Button
-    private lateinit var imgVAlarma: ImageView
-    private var currentPhotoPath: String? = null
-    private lateinit var sharedPreferences: SharedPreferences
+     lateinit var TextID: EditText
+     lateinit var imageView: ImageView
+     lateinit var nomMedicamentoEditText: EditText
+     lateinit var infMedicamentoEditText: EditText
+     lateinit var btnGuardar: Button
+     var currentPhotoPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_agregar)
 
+        TextID = findViewById(R.id.edID)
         imageView = findViewById(R.id.miImageView)
         nomMedicamentoEditText = findViewById(R.id.nomMedicamento)
         infMedicamentoEditText = findViewById(R.id.infMedicamento)
         btnGuardar = findViewById(R.id.btnGuardar)
-        imgVAlarma = findViewById(R.id.imgVAlarma)
 
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
-
-        sharedPreferences.edit().clear().apply()
-
-        // Recuperar información del medicamento si existe
-        val savedNombre = sharedPreferences.getString("NOMBRE_MEDICAMENTO", "")
-        val savedInformacion = sharedPreferences.getString("INFORMACION_MEDICAMENTO", "")
-
-        nomMedicamentoEditText.setText("")
-        infMedicamentoEditText.setText("")
-
-        nomMedicamentoEditText.setText(savedNombre)
-        infMedicamentoEditText.setText(savedInformacion)
 
         btnGuardar.setOnClickListener {
-            // Obtener el nombre e información del medicamento
-            val nombreMedicamento = nomMedicamentoEditText.text.toString()
-            val informacionMedicamento = infMedicamentoEditText.text.toString()
-
-            // Guardar la información del medicamento en SharedPreferences
-            with(sharedPreferences.edit()) {
-                putString("NOMBRE_MEDICAMENTO", nombreMedicamento)
-                putString("INFORMACION_MEDICAMENTO", informacionMedicamento)
-                apply()
-            }
-
-            nomMedicamentoEditText.text.clear()
-            infMedicamentoEditText.text.clear()
-
-            // Guardar la imagen en el almacenamiento externo
-            // Nota: Puedes llamar a la función saveImageToExternalStorage aquí si deseas
-
-            // Mostrar un mensaje emergente (Toast)
-            showToast("Datos Guardados Correctamente")
+            guardarMedic(it)
         }
 
         imageView.setOnClickListener {
             checkCameraPermissionAndOpenCamera()
         }
 
-        imgVAlarma.setOnClickListener {
-            openAlarmFormat()
+    }
+
+    override fun onResume() {
+        super.onResume()
+       mostrarDatos()
+    }
+
+    fun mostrarDatos(){
+
+        val db = Room.databaseBuilder(applicationContext,
+            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().build()
+
+        val medicamentos = db.medicDao().todosMedic()
+
+        Log.e("DATOS", "Medicamentos: ${medicamentos.size}")
+
+        medicamentos.forEach { x ->
+            Log.e("DATOS", "${x.id} ${x.nombre} ${x.descripcion}")
         }
     }
 
-    private fun openAlarmFormat() {
-        // Aquí deberías abrir la actividad o diálogo para configurar la alarma
-        // Puedes usar un Intent para abrir otra actividad o mostrar un diálogo.
-        // Por ejemplo, puedes utilizar un DatePickerDialog y un TimePickerDialog.
-        // Dependiendo de tus necesidades, podrías necesitar crear una nueva actividad.
+    fun guardarMedic(v:View) {
+        val id = TextID.text.toString().toInt()
+        val nombre = nomMedicamentoEditText.text.toString()
+        val descripcion = infMedicamentoEditText.text.toString()
 
-        // Ejemplo para abrir un DatePickerDialog y TimePickerDialog:
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        TextID.setText("")
+        nomMedicamentoEditText.setText("")
+        infMedicamentoEditText.setText("")
 
-        val datePickerDialog = DatePickerDialog(
-            this,
-            DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-                // La fecha ha sido seleccionada, ahora puedes abrir el TimePickerDialog
-                val timePickerDialog = TimePickerDialog(
-                    this,
-                    TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
-                        // La hora también ha sido seleccionada
-                        // Aquí puedes configurar la alarma con la fecha y hora seleccionadas
-                        configureAlarm(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute)
-                    },
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    false
-                )
-                timePickerDialog.show()
-            },
-            year,
-            month,
-            day
-        )
-        datePickerDialog.show()
+        val rutaImagen = currentPhotoPath ?: ""
+
+        val medicamento = Medic(id, nombre, descripcion, rutaImagen)
+
+        val db = Room.databaseBuilder(applicationContext,
+            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().build()
+
+        db.medicDao().agregarMedic(medicamento)
+
+        Snackbar.make(v,"Se Guardo", Snackbar.LENGTH_LONG).show()
+
+        mostrarDatos()
+
     }
-
-    private fun configureAlarm(year: Int, month: Int, day: Int, hour: Int, minute: Int) {
-        // Aquí debes implementar la lógica para configurar la alarma con la fecha y hora seleccionadas
-        // Puedes usar AlarmManager y otros componentes según tus necesidades
-        // Este es solo un ejemplo básico
-
-        // Por ejemplo, podrías usar AlarmManager para programar una alarma
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, TuBroadcastReceiver::class.java)
-        // Configura la lógica según tus necesidades
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DAY_OF_MONTH, day)
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-
-        // Puedes ajustar la lógica según tus necesidades
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
-        showToast("Alarma configurada para: $year-$month-$day $hour:$minute")
-    }
-
 
     private fun checkCameraPermissionAndOpenCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -189,12 +138,48 @@ class Agregar : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
                 val imageBitmap = data?.extras?.get("data") as Bitmap?
-                imageView.setImageBitmap(imageBitmap)
 
-                // Guardar la imagen en el almacenamiento externo
-                saveImageToExternalStorage(imageBitmap)
+                // Obtener la orientación de la imagen desde los metadatos
+                val orientation = data?.data?.let { getCameraPhotoOrientation(it) } ?: 0
+
+                // Rotar la imagen según la orientación
+                val rotatedBitmap = rotateBitmap(imageBitmap, orientation)
+
+                // Guardar la imagen en el almacenamiento externo y obtener la ruta
+                val rutaImagen = saveImageToExternalStorage(rotatedBitmap)
+
+                imageView.setImageBitmap(rotatedBitmap)
+
+                // Actualizar currentPhotoPath con la ruta de la imagen
+                currentPhotoPath = rutaImagen
             }
         }
+
+    // Función para obtener la orientación de la imagen
+    private fun getCameraPhotoOrientation(imageUri: Uri?): Int {
+        val cursor = contentResolver.query(imageUri!!, arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null)
+        cursor?.let {
+            if (it.moveToFirst()) {
+                val orientation = it.getInt(0)
+                it.close()
+                return orientation
+            }
+        }
+        return 0
+    }
+
+    // Función para rotar la imagen según la orientación
+    private fun rotateBitmap(source: Bitmap?, orientation: Int): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(orientation.toFloat())
+
+        // Ajuste para corregir la orientación horizontal
+        if (orientation == 90 || orientation == 270) {
+            matrix.postScale(-1f, 1f)
+        }
+
+        return Bitmap.createBitmap(source!!, 0, 0, source.width, source.height, matrix, true)
+    }
 
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -205,12 +190,14 @@ class Agregar : AppCompatActivity() {
         }
     }
 
-    private fun saveImageToExternalStorage(imageBitmap: Bitmap?) {
+    private fun saveImageToExternalStorage(imageBitmap: Bitmap?): String {
+        var rutaImagen = ""
+
         if (imageBitmap != null) {
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             val imageFile = File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
-            currentPhotoPath = imageFile.absolutePath
+            rutaImagen = imageFile.absolutePath
 
             try {
                 val fos = FileOutputStream(imageFile)
@@ -220,6 +207,8 @@ class Agregar : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+
+        return rutaImagen
     }
 
     private fun showToast(message: String) {
