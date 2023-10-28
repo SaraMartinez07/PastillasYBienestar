@@ -2,17 +2,13 @@ package com.example.pastillasybienestar
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.DatePickerDialog
-import android.app.PendingIntent
-import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -28,14 +24,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Room
-import com.google.android.material.snackbar.Snackbar
+
 
 class Agregar : AppCompatActivity() {
 
@@ -95,12 +91,19 @@ class Agregar : AppCompatActivity() {
         nomMedicamentoEditText.setText("")
         infMedicamentoEditText.setText("")
 
-        val rutaImagen = currentPhotoPath ?: ""
 
-        val medicamento = Medic(id, nombre, descripcion, rutaImagen)
+        val imageBitmap: Bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
+
+        val medicamento = Medic(id, nombre, descripcion, imagenBlob = byteArray)
 
         val db = Room.databaseBuilder(applicationContext,
-            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().build()
+            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries()
+            //.fallbackToDestructiveMigration()
+            .build()
 
         db.medicDao().agregarMedic(medicamento)
 

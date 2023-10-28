@@ -9,5 +9,5 @@ data class Medic (
     @PrimaryKey val id:Int,
     @ColumnInfo(name = "nombre") val nombre:String,
     @ColumnInfo(name = "descripcion") val descripcion:String,
-    @ColumnInfo(name = "ruta_imagen") val rutaImagen: String
+    @ColumnInfo(name = "ruta_imagen") val imagenBlob: ByteArray
 )
