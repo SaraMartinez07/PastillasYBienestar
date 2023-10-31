@@ -18,7 +18,7 @@ class AddAlarma : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_alarma)
 
-        recicler = findViewById(R.id.recyclerView2)
+        recicler = findViewById(R.id.listaMedic)
         alarma = findViewById(R.id.imgAlarma)
         boton = findViewById(R.id.btnGuardarA)
     }

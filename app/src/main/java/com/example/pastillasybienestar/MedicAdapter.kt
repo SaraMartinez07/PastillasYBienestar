@@ -1,3 +1,5 @@
+package com.example.pastillasybienestar
+
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -6,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pastillasybienestar.Medic
-import com.example.pastillasybienestar.R
 
 class MedicAdapter(private val context: Context, private val medicList: List<Medic>) :
     RecyclerView.Adapter<MedicAdapter.MedicViewHolder>() {
