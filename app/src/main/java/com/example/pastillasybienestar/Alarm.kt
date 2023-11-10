@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Alarm (
-     @PrimaryKey val idA:Int,
-     //val id:Int,
-     @ColumnInfo (name = "hora") val hora:TimePickerDialog,
-     @ColumnInfo (name = "fecha")val fecha:DatePickerDialog
+     @PrimaryKey val idA:Long,
+     @ColumnInfo (name = "hora") val hora:String,
+     @ColumnInfo (name = "fecha")val fecha:String,
+     @ColumnInfo(name = "idMedicamento") val idMedicamento: Int
 )

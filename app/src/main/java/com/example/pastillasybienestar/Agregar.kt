@@ -101,8 +101,7 @@ class Agregar : AppCompatActivity() {
         val medicamento = Medic(id, nombre, descripcion, imagenBlob = byteArray)
 
         val db = Room.databaseBuilder(applicationContext,
-            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries()
-            //.fallbackToDestructiveMigration()
+            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().fallbackToDestructiveMigration()
             .build()
 
         db.medicDao().agregarMedic(medicamento)

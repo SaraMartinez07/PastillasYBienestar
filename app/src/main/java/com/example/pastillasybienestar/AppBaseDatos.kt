@@ -6,8 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Medic::class , Alarm::class], version = 1
-    //autoMigrations = [AutoMigration (from = 1, to = 2)]
+@Database(entities = [Medic::class , Alarm::class], version = 2, exportSchema = false
 )
 abstract class AppBaseDatos : RoomDatabase() {
     abstract fun medicDao(): DAOMedic
@@ -22,8 +21,12 @@ abstract class AppBaseDatos : RoomDatabase() {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
                         AppBaseDatos::class.java,
-                        "app_database"
-                    ).build()
+                        "medicamento"
+                    )
+                        //.fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
+                        .build()
+
                 }
                 return INSTANCE!!
             }
