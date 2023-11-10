@@ -11,5 +11,6 @@ data class Alarm (
      @PrimaryKey val idA:Long,
      @ColumnInfo (name = "hora") val hora:String,
      @ColumnInfo (name = "fecha")val fecha:String,
-     @ColumnInfo(name = "idMedicamento") val idMedicamento: Int
+     @ColumnInfo(name = "idMedicamento") val idMedicamento: Int,
+     @ColumnInfo(name = "nomMedicamento") val nomMedicamento: String
 )

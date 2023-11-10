@@ -23,7 +23,7 @@ abstract class AppBaseDatos : RoomDatabase() {
                         AppBaseDatos::class.java,
                         "medicamento"
                     )
-                        //.fallbackToDestructiveMigration()
+                        .fallbackToDestructiveMigration()
                         .allowMainThreadQueries()
                         .build()
 
@@ -36,6 +36,9 @@ abstract class AppBaseDatos : RoomDatabase() {
     // Función para obtener todos los medicamentos desde el DAO
     fun getAllMedics(): List<Medic> {
         return medicDao().todosMedic()
+    }
+    fun getAllAlarmas(): List<Alarm> {
+        return alarmaDao().allAlarma()
     }
 
 }

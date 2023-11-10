@@ -2,6 +2,7 @@ package com.example.pastillasybienestar
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -113,7 +114,8 @@ import java.util.Locale
                 idA = System.currentTimeMillis(),
                 hora = fechaHoraString,
                 fecha = fechaHoraString,
-                idMedicamento = medicamentoSeleccionado!!.id
+                idMedicamento = medicamentoSeleccionado!!.id,
+                nomMedicamento = medicamentoSeleccionado!!.nombre
             )
 
             db.alarmaDao().agregarAlarm(nuevaAlarma)
@@ -121,6 +123,14 @@ import java.util.Locale
             // Puedes mostrar un mensaje de éxito, actualizar la interfaz, etc.
             Log.e("Alarma", "Alarma guardada con éxito: $fechaHoraString")
             mostrarMensajeExito("Alarma guardada con éxito: $fechaHoraString")
+
+            // Inicia la actividad ActivityListaMedi
+            val intent = Intent(this, ListaMedi::class.java)
+            startActivity(intent)
+
+            // Cierra la actividad actual para regresar a la actividad anterior
+            finish()
+
         } else {
             // Manejar el caso en que no se haya seleccionado ningún medicamento
             Log.e("Error", "No se ha seleccionado ningún medicamento.")

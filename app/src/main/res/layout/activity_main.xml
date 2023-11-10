@@ -33,4 +33,14 @@
         app:layout_constraintVertical_bias="0.822"
         app:srcCompat="@drawable/iconomas" />
 
+    <Button
+        android:id="@+id/buttonNot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notificacion"
+        app:layout_constraintBottom_toTopOf="@+id/btnVAgregar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

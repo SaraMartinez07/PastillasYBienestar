@@ -6,9 +6,8 @@ import androidx.room.Query
 
 @Dao
 interface DaoAlarma {
-
-@Query("Select * from alarm")
+    @Query("Select * from alarm")
     fun allAlarma(): List<Alarm>
-@Insert
+    @Insert
     fun agregarAlarm(vararg alarm: Alarm)
 }
