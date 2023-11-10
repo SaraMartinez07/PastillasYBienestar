@@ -54,13 +54,29 @@ class Agregar : AppCompatActivity() {
 
 
         btnGuardar.setOnClickListener {
-            guardarMedic(it)
+            if (validarCampos()) {
+                guardarMedic(it)
+            } else {
+                mostrarMensaje("Por favor, llene todos los campos.")
+            }
         }
 
         imageView.setOnClickListener {
             checkCameraPermissionAndOpenCamera()
         }
 
+    }
+
+    private fun validarCampos(): Boolean {
+        val id = TextID.text.toString()
+        val nombre = nomMedicamentoEditText.text.toString()
+        val descripcion = infMedicamentoEditText.text.toString()
+
+        return id.isNotBlank() && nombre.isNotBlank() && descripcion.isNotBlank()
+    }
+
+    private fun mostrarMensaje(mensaje: String) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
@@ -83,33 +99,36 @@ class Agregar : AppCompatActivity() {
     }
 
     fun guardarMedic(v:View) {
-        val id = TextID.text.toString().toInt()
-        val nombre = nomMedicamentoEditText.text.toString()
-        val descripcion = infMedicamentoEditText.text.toString()
+        if (validarCampos()) {
+            val id = TextID.text.toString().toInt()
+            val nombre = nomMedicamentoEditText.text.toString()
+            val descripcion = infMedicamentoEditText.text.toString()
 
-        TextID.setText("")
-        nomMedicamentoEditText.setText("")
-        infMedicamentoEditText.setText("")
+            TextID.setText("")
+            nomMedicamentoEditText.setText("")
+            infMedicamentoEditText.setText("")
 
+            val imageBitmap: Bitmap = BitmapFactory.decodeFile(currentPhotoPath)
 
-        val imageBitmap: Bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
 
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
+            val medicamento = Medic(id, nombre, descripcion, imagenBlob = byteArray)
 
-        val medicamento = Medic(id, nombre, descripcion, imagenBlob = byteArray)
+            val db = Room.databaseBuilder(applicationContext,
+                AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().fallbackToDestructiveMigration()
+                .build()
 
-        val db = Room.databaseBuilder(applicationContext,
-            AppBaseDatos::class.java, "medicamento").allowMainThreadQueries().fallbackToDestructiveMigration()
-            .build()
+            db.medicDao().agregarMedic(medicamento)
 
-        db.medicDao().agregarMedic(medicamento)
+            Snackbar.make(v, "Se Guardo", Snackbar.LENGTH_LONG).show()
 
-        Snackbar.make(v,"Se Guardo", Snackbar.LENGTH_LONG).show()
-
-        mostrarDatos()
-
+            mostrarDatos()
+            finish()
+        } else {
+            mostrarMensaje("Por favor, llene todos los campos.")
+        }
     }
 
     private fun checkCameraPermissionAndOpenCamera() {
