@@ -23,7 +23,7 @@ abstract class AppBaseDatos : RoomDatabase() {
                         AppBaseDatos::class.java,
                         "medicamento"
                     )
-                        .fallbackToDestructiveMigration()
+                        //.fallbackToDestructiveMigration()
                         .allowMainThreadQueries()
                         .build()
 

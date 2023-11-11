@@ -34,10 +34,10 @@
         app:srcCompat="@drawable/iconomas" />
 
     <Button
-        android:id="@+id/buttonNot"
+        android:id="@+id/btnNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Notificacion"
+        android:text="Noti"
         app:layout_constraintBottom_toTopOf="@+id/btnVAgregar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
