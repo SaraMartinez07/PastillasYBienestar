@@ -30,15 +30,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d("Notificacion", "Entrando en onCreate")
+        setContentView(R.layout.activity_main)
 
-        val myNotificationButton = findViewById<Button>(R.id.btnNotification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel()
+            scheduleNotification()
+        }
+
+        /*val myNotificationButton = findViewById<Button>(R.id.btnNotification)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel()
 
             myNotificationButton.setOnClickListener{
                 scheduleNotification()
             }
-        }
+        }*/
 
 
         //botNoti = findViewById(R.id.buttonNot)

@@ -8,31 +8,33 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-class AlarmNotificacion:BroadcastReceiver() {
-    companion object{
+class AlarmNotificacion : BroadcastReceiver() {
+    companion object {
         const val Notification_ID = 1
     }
+
     override fun onReceive(context: Context?, p1: Intent?) {
+        Log.d("Notificacion", "Recibida la difusión")
         if (context != null) {
             createSimpleNotification(context)
         }
     }
 
-    fun createSimpleNotification(context: Context){
-
-        println("hola");
-        val intent=Intent(context, AddAlarma::class.java).apply {
+    fun createSimpleNotification(context: Context) {
+        println("hola")
+        val intent = Intent(context, AddAlarma::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
         val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-        val pendigIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, flag)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, flag)
 
-        val notificacion = NotificationCompat.Builder(context, "1")
+        val notification = NotificationCompat.Builder(context, "1")
             .setSmallIcon(android.R.drawable.ic_delete)
             .setContentTitle("Pastillas")
             .setContentText("Alarma")
@@ -40,11 +42,11 @@ class AlarmNotificacion:BroadcastReceiver() {
                 NotificationCompat.BigTextStyle()
                     .bigText("HOLIIIIIII RECUERDA TOMAR TU MEDICAMENTO ;)")
             )
-            .setContentIntent(pendigIntent)
+            .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(Notification_ID, notificacion)
+        manager.notify(Notification_ID, notification)
     }
 }
