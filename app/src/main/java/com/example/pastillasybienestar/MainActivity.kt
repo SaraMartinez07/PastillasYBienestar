@@ -1,6 +1,8 @@
 package com.example.pastillasybienestar
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,28 +12,34 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
+import com.example.pastillasybienestar.AlarmNotificacion.Companion.Notification_ID
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        val MY_CHANNEL_ID = 1
-    }
-
+    val MY_CHANNEL_ID = "1"
+    val REQUEST_ID_PERMISSION =23
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val myNotificationButton = findViewById<Button>(R.id.btnNotification)
-        createChannel()
-        myNotificationButton.setOnClickListener{
-            createSimpleNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel()
+
+            myNotificationButton.setOnClickListener{
+                scheduleNotification()
+            }
         }
+
 
         //botNoti = findViewById(R.id.buttonNot)
 
@@ -47,48 +55,37 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
     }
-    fun createChannel(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.0){
-            val channel = NotificationChannel(
-                MY_CHANNEL_ID,
-                "MyChannel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Jungkook"
-            }
-            val notificationManager:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+
+    @SuppressLint("ScheduleExactAlarm")
+    private fun scheduleNotification() {
+
+        Log.d("Notificacion", "Programando notificación")
+        val intent = Intent(applicationContext, AlarmNotificacion::class.java)
+        val  pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            Notification_ID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, pendingIntent)
     }
-    fun createSimpleNotification(){
 
-        val intent=Intent(this, AddAlarma::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    @RequiresApi(Build.VERSION_CODES.O)
+  private fun createChannel(){
+        val channel = NotificationChannel(
+            MY_CHANNEL_ID,
+            "MyChannel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Jungkook"
         }
-
-        val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-        val pendigIntent:PendingIntent = PendingIntent.getActivity(this, 0, intent, flag)
-
-        var builder = NotificationCompat.Builder(this, MY_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_delete)
-            .setContentTitle("My title")
-            .setContentText("ejemplo")
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText("HOLIIIIIII")
-            )
-            .setContentIntent(pendigIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(this)){
-            notify(1,builder.build())
-        }
+        val notificationManager:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun sendVentanaAgr(view: View){
         val intent = Intent(this, ProgMedi::class.java)
         startActivity(intent)
     }
-
-
 }
