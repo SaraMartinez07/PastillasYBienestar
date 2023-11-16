@@ -27,28 +27,16 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity() {
     val MY_CHANNEL_ID = "1"
     val REQUEST_ID_PERMISSION =23
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d("Notificacion", "Entrando en onCreate")
-        setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel()
             scheduleNotification()
         }
-
-        /*val myNotificationButton = findViewById<Button>(R.id.btnNotification)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel()
-
-            myNotificationButton.setOnClickListener{
-                scheduleNotification()
-            }
-        }*/
-
-
-        //botNoti = findViewById(R.id.buttonNot)
 
         // Configura la animación
         val anim = AnimationUtils.loadAnimation(this, R.anim.mi_animacion)
@@ -60,20 +48,18 @@ class MainActivity : AppCompatActivity() {
 
         // Luego, establece el diseño de la actividad
         setContentView(R.layout.activity_main)
-
     }
 
     @SuppressLint("ScheduleExactAlarm")
     private fun scheduleNotification() {
-
-        Log.d("Notificacion", "Programando notificación")
+        Log.d("Notificacion", "scheduleNotification llamado")
 
         // Obtén la instancia de Calendar
         val calendar = Calendar.getInstance()
 
-        // Establece la hora, minuto y segundo deseados
-        calendar.set(Calendar.HOUR_OF_DAY, 12) // Hora del día en formato de 24 horas
-        calendar.set(Calendar.MINUTE, 30) // Minuto
+        // Establece la hora y minutos deseados
+        calendar.set(Calendar.HOUR_OF_DAY, 15) // Hora del día en formato de 24 horas
+        calendar.set(Calendar.MINUTE, 28) // Minuto
         calendar.set(Calendar.SECOND, 0) // Segundo
 
         // Crea un Intent y PendingIntent como antes
@@ -88,17 +74,17 @@ class MainActivity : AppCompatActivity() {
         // Obtén el servicio de AlarmManager
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // Establece la alarma con la nueva hora, minuto y segundo, y repite cada día
+        // Establece la alarma para que se repita cada día
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
+            AlarmManager.INTERVAL_DAY, // Repetir cada día
             pendingIntent
         )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-  private fun createChannel(){
+    private fun createChannel() {
         val channel = NotificationChannel(
             MY_CHANNEL_ID,
             "MyChannel",
@@ -106,11 +92,12 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             description = "Jungkook"
         }
-        val notificationManager:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
-    fun sendVentanaAgr(view: View){
+    fun sendVentanaAgr(view: View) {
         val intent = Intent(this, ProgMedi::class.java)
         startActivity(intent)
     }

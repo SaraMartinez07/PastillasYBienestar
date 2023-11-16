@@ -20,6 +20,8 @@ class AlarmNotificacion : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, p1: Intent?) {
         Log.d("Notificacion", "Recibida la difusión")
+        // aqui puede recuperar el nombre del medicamento
+        // getIntent().getStringExtra("kajslkjsl")
         if (context != null) {
             createSimpleNotification(context)
         }

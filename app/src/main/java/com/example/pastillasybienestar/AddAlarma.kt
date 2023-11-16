@@ -1,7 +1,11 @@
 package com.example.pastillasybienestar
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -130,7 +134,8 @@ import java.util.Locale
 
             // Cierra la actividad actual para regresar a la actividad anterior
             finish()
-
+            // AQUI VOY A MANDAR LLAMAR LA ALARMA
+            //scheduleAlarm( AQUI VA LA FEHCA Y LA HORA )
         } else {
             // Manejar el caso en que no se haya seleccionado ningún medicamento
             Log.e("Error", "No se ha seleccionado ningún medicamento.")
@@ -152,5 +157,41 @@ import java.util.Locale
         Log.e("datitois", medic.id.toString())
         medicamentoSeleccionado = medic
      }
+
+     @SuppressLint("ScheduleExactAlarm")
+     private fun scheduleNotification(/*A QUI VOY A RECIBIR LA FECHA Y LA HORA */) {
+         Log.d("Notificacion", "scheduleNotification llamado")
+
+         // Obtén la instancia de Calendar
+         val calendar = Calendar.getInstance()
+
+         // Establece la hora y minutos deseados  ESTO LO VOY A CAMBIAR POR LON QUE VIENE EN LA HORA Y LA FECHA
+         calendar.set(Calendar.HOUR_OF_DAY, 15) // Hora del día en formato de 24 horas
+         calendar.set(Calendar.MINUTE, 28) // Minuto
+         calendar.set(Calendar.SECOND, 0) // Segundo
+
+         // Crea un Intent y PendingIntent como antes
+         val intent = Intent(applicationContext, AlarmNotificacion::class.java)
+         intent.putExtra("medicamento","Medicamento")
+         val pendingIntent = PendingIntent.getBroadcast(
+             applicationContext,
+             AlarmNotificacion.Notification_ID,
+             intent,
+             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+         )
+
+         // Obtén el servicio de AlarmManager
+         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+         // Establece la alarma para que se repita cada día
+         alarmManager.setRepeating(
+             AlarmManager.RTC_WAKEUP,
+             calendar.timeInMillis,
+             AlarmManager.INTERVAL_DAY, // Repetir cada día
+             pendingIntent
+         )
+     }
+
+
  }
 
