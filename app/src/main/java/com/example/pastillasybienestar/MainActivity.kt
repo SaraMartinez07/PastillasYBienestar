@@ -67,15 +67,34 @@ class MainActivity : AppCompatActivity() {
     private fun scheduleNotification() {
 
         Log.d("Notificacion", "Programando notificación")
+
+        // Obtén la instancia de Calendar
+        val calendar = Calendar.getInstance()
+
+        // Establece la hora, minuto y segundo deseados
+        calendar.set(Calendar.HOUR_OF_DAY, 12) // Hora del día en formato de 24 horas
+        calendar.set(Calendar.MINUTE, 30) // Minuto
+        calendar.set(Calendar.SECOND, 0) // Segundo
+
+        // Crea un Intent y PendingIntent como antes
         val intent = Intent(applicationContext, AlarmNotificacion::class.java)
-        val  pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             Notification_ID,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+
+        // Obtén el servicio de AlarmManager
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + 15000, pendingIntent)
+
+        // Establece la alarma con la nueva hora, minuto y segundo, y repite cada día
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
