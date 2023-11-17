@@ -29,7 +29,7 @@ class AlarmNotificacion : BroadcastReceiver() {
 
     fun createSimpleNotification(context: Context) {
         println("hola")
-        val intent = Intent(context, AddAlarma::class.java).apply {
+        val intent = Intent(context, ListaMedi::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
